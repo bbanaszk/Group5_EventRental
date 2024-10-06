@@ -35,6 +35,8 @@ javafx {
 }
 
 dependencies {
+    implementation files('lib/mysql-connector-j-9.0.0.jar')
+
     implementation('org.controlsfx:controlsfx:11.1.2')
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
