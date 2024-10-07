@@ -22,9 +22,7 @@ public class ModificationClasses {
     // Helper method to execute update queries
     private static void executeUpdate(String query) {
         try {
-
             JDBCConnection.stmt.executeUpdate(query);
-            System.out.println("Operation successful.");
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Failed to execute the operation.");
