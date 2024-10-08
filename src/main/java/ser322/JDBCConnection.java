@@ -1,3 +1,5 @@
+package ser322;
+
 import java.sql.*;
 
 public class JDBCConnection {

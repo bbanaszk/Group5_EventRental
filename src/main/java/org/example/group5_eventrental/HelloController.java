@@ -34,7 +34,7 @@ public class HelloController {
     @FXML private TableView tableView;
     private StringBuilder questionMark1 = new StringBuilder("?");
     private StringBuilder questionMark2 = new StringBuilder("?");
-//    private JDBCConnection jdbc;
+//    private ser322.JDBCConnection jdbc;
 //
 //    @FXML protected void onConnectField() {
 //        String url = inputURLField.getText();
@@ -42,7 +42,7 @@ public class HelloController {
 //        String password = inputPasswordField.getText();
 //
 //        // Connect
-//        jdbc = new JDBCConnection();
+//        jdbc = new ser322.JDBCConnection();
 //        jdbc.establishConnection("com.mysql.cj.jdbc.Driver", url, username, password);
 //        // IF successful, figure out how to get to a new UI screen that shows Select, Update, Delete, Edit
 //    }
