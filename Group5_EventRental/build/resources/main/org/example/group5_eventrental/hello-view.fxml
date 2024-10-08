@@ -23,7 +23,7 @@
 
 <!--        <Button text="Connect" onAction="#onConnectField"/>-->
     </VBox>
-
+    
     <Label fx:id="welcomeText"/>
 
     <HBox alignment="CENTER" spacing="10.0">

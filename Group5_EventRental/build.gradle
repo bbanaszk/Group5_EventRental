@@ -35,6 +35,8 @@ javafx {
 }
 
 dependencies {
+    implementation files('lib/mysql-connector-j-9.0.0.jar')
+
     implementation('org.controlsfx:controlsfx:11.1.2')
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
@@ -56,3 +58,81 @@ jlink {
 jlinkZip {
     group = 'distribution'
 }
+
+
+//// set as java application
+//apply plugin: 'application'
+//
+////define main class
+//mainClassName = 'Concentration'
+//
+//def host = 'localhost'
+//def port = 8888
+//
+//task arguments {
+//    if (project.hasProperty("host")) {
+//        host = project.getProperty("host")
+//    }
+//    if (project.hasProperty("port")) {
+//        port = project.getProperty("port")
+//    }
+//}
+//
+//repositories {
+//    mavenCentral()
+//}
+//
+//dependencies {
+//    implementation group: 'org.json', name: 'json', version: '20200518'
+//}
+//
+//
+//task runClient(type: JavaExec) {
+//    group 'gui'
+//    description 'Displays a GUI for a game of concentration'
+//
+//    classpath = sourceSets.main.runtimeClasspath
+//
+//    main = 'Assign32starter.ClientGui'
+//    standardInput = System.in
+//
+//    args port
+//    args host
+//}
+//
+//task runServer(type: JavaExec) {
+//    group 'gui'
+//    description 'Displays a GUI for a game of concentration'
+//
+//    classpath = sourceSets.main.runtimeClasspath
+//    main = 'Assign32starter.SockServer'
+//
+//    args port
+//}
+
+//def user = 'root'
+//def pass = 'rootROOT!'
+//
+//
+//task arguments {
+//    if (project.hasProperty("user")) {
+//        user = project.getProperty("user")
+//    }
+//    if (project.hasProperty("pass")) {
+//        pass = project.getProperty("pass")
+//    }
+//}
+//
+//task runUI(type: JavaExec) {
+//    group 'display'
+//    description 'Displays the UI application'
+//
+//    classpath = sourceSets.main.runtimeClasspath
+////    main = mainModule
+////    main = 'org.example.group5_eventrental.HelloApplication'
+//    main = mainClass
+//    standardInput = System.in
+//
+//    args user
+//    args pass
+//}
