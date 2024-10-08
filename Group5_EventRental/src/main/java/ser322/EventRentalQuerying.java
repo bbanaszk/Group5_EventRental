@@ -8,9 +8,9 @@ public class EventRentalQuerying {
     static Scanner input = new Scanner(System.in);
     public static void main (String[] args) {
 
-        String url = "jdbc:mysql://localhost:3306/EventRental";
-        String user = "root";
-        String password = "Ru$7yB1k35";
+        String url = args[0];
+        String user = args[1];
+        String password = args[2];
 
 
         Connection conn = null;
@@ -121,7 +121,7 @@ public class EventRentalQuerying {
                     System.out.println("SQL ERROR: " + e.getMessage());
                 }
             }
-            
+
         }
 
     }
