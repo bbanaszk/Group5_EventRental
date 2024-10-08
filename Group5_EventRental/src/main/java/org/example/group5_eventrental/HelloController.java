@@ -32,6 +32,8 @@ public class HelloController {
     @FXML private ObservableList<ObservableList> query;
     @FXML private ListSelectionView selectedAttributes;
     @FXML private TableView tableView;
+    private StringBuilder questionMark1 = new StringBuilder("?");
+    private StringBuilder questionMark2 = new StringBuilder("?");
 //    private JDBCConnection jdbc;
 //
 //    @FXML protected void onConnectField() {
@@ -105,7 +107,7 @@ public class HelloController {
                 if (conn != null)
                     conn.close();
             } catch (SQLException se) {
-                SQLstatus.setText(se.getSQLState());
+//                SQLstatus.setText(se.getSQLState());
                 errorLabel.setText(se.toString());
             }
         }
@@ -134,9 +136,9 @@ public class HelloController {
         if (errorLabel != null) {
             errorLabel.setText("");
         }
-        if (SQLstatus != null) {
-            SQLstatus.setText("");
-        }
+//        if (SQLstatus != null) {
+//            SQLstatus.setText("");
+//        }
         String input = inputTextField.getText();
         fetch(input);
 
@@ -153,14 +155,29 @@ public class HelloController {
         ObservableList<String> row = FXCollections.observableArrayList();
         row.addAll(selectedAttributes.getTargetItems());
 
-        StringBuilder questionMark1 = new StringBuilder();
+        questionMark1 = new StringBuilder("?");
 
         for (String str : row) {
             questionMark1.append(str.toString()).append(",");
         }
-        questionMark1.deleteCharAt(questionMark1.length() - 1);
 
-        System.out.println(questionMark1);
+        if (questionMark1.length() > 1) {
+            questionMark1.deleteCharAt(questionMark1.length() - 1);
+        }
+
+
+        questionMark2 = new StringBuilder("?");
+
+        if (!questionMark1.toString().equals("?")) {
+            questionMark1.deleteCharAt(0);
+        }
+
+        if (!questionMark2.toString().equals("?")) {
+            questionMark2.deleteCharAt(0);
+        }
+
+        SQLstatus.setText("SELECT " + questionMark1.toString() + " FROM " + questionMark2.toString());
+//        System.out.println(questionMark1);
 
 //        ps.setString(1, questionMark1.toString());
 //        for (int i = 0; i < row.size(); i++) {

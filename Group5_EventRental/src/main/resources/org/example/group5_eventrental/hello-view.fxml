@@ -24,7 +24,6 @@
 <!--        <Button text="Connect" onAction="#onConnectField"/>-->
     </VBox>
 
-
     <Label fx:id="welcomeText"/>
 
     <HBox alignment="CENTER" spacing="10.0">
@@ -32,18 +31,20 @@
         <Button text="Execute" onAction="#onExecuteButtonClick"/>
     </HBox>
 
-
-
     <HBox alignment="CENTER" spacing="10.0">
 <!--        <Button text="Add" onAction="#onAddButtonClick"/>-->
         <ListSelectionView fx:id="selectedAttributes"/>
-        <Button text="Query" onAction="#onSelectQueryButtonClick"/>
+
+        <VBox alignment="CENTER" spacing="10.0">
+            <Label fx:id="SQLstatus"/>
+            <Button text="Query" onAction="#onSelectQueryButtonClick"/>
+        </VBox>
+
 <!--        <Button text="Update" onAction="#onUpdateButtonClick"/>-->
 <!--        <Button text="Delete" onAction="#onDeleteButtonClick"/>-->
     </HBox>
 
     <TableView fx:id="tableView"/>
-    <Label fx:id="SQLstatus"/>
     <Label fx:id="errorLabel"/>
 
 </VBox>
