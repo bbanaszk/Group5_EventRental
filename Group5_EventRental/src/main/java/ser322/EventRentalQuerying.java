@@ -60,7 +60,7 @@ public class EventRentalQuerying {
 
     }
 
-    public static void selectClientEventDetails(String url, String user, String password) {
+    public static void selectClientEventDetails(Connection conn, String url, String user, String password) {
 
         // ask for client ID from user
         Scanner input = new Scanner(System.in);
@@ -68,7 +68,6 @@ public class EventRentalQuerying {
         String clientID = input.next();
 
         // create connection stuff
-        Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
 
@@ -122,18 +121,12 @@ public class EventRentalQuerying {
                     System.out.println("SQL ERROR: " + e.getMessage());
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            
         }
 
     }
 
-    public static void selectEmployeeDetailsByEvent(String url, String user, String password) {
+    public static void selectEmployeeDetailsByEvent(Connection conn, String url, String user, String password) {
 
         // ask for client ID from user
         Scanner input = new Scanner(System.in);
@@ -141,7 +134,6 @@ public class EventRentalQuerying {
         String eventID = input.next();
 
         // create connection stuff
-        Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
 
@@ -195,18 +187,12 @@ public class EventRentalQuerying {
                     System.out.println("SQL ERROR: " + e.getMessage());
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+
         }
 
     }
 
-    public static void selectEquipmentDetailsByEvent(String url, String user, String password) {
+    public static void selectEquipmentDetailsByEvent(Connection conn, String url, String user, String password) {
 
         // ask for client ID from user
         Scanner input = new Scanner(System.in);
@@ -214,7 +200,6 @@ public class EventRentalQuerying {
         String eventID = input.next();
 
         // create connection stuff
-        Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
 
@@ -268,18 +253,12 @@ public class EventRentalQuerying {
                     System.out.println("SQL ERROR: " + e.getMessage());
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+
         }
 
     }
 
-    public static void listAllClientsWhoHaveHadEvents(String url, String user, String password) {
+    public static void listAllClientsWhoHaveHadEvents(Connection conn, String url, String user, String password) {
 
         // ask for client ID from user
         Scanner input = new Scanner(System.in);
@@ -287,7 +266,6 @@ public class EventRentalQuerying {
         String eventID = input.next();
 
         // create connection stuff
-        Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
 
@@ -336,18 +314,12 @@ public class EventRentalQuerying {
                     System.out.println("SQL ERROR: " + e.getMessage());
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+
         }
 
     }
 
-    public static void getPhoneNumbersForAllEmployeesWorkingAnEvent(String url, String user, String password) {
+    public static void getPhoneNumbersForAllEmployeesWorkingAnEvent(Connection conn, String url, String user, String password) {
 
         // ask for client ID from user
         Scanner input = new Scanner(System.in);
@@ -355,7 +327,6 @@ public class EventRentalQuerying {
         String eventID = input.next();
 
         // create connection stuff
-        Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
 
@@ -405,18 +376,12 @@ public class EventRentalQuerying {
                     System.out.println("SQL ERROR: " + e.getMessage());
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+
         }
 
     }
 
-    public static void selectAllEquipmentByLastServiceDate(String url, String user, String password) {
+    public static void selectAllEquipmentByLastServiceDate(Connection conn, String url, String user, String password) {
 
         // ask for client ID from user
         Scanner input = new Scanner(System.in);
@@ -424,7 +389,6 @@ public class EventRentalQuerying {
         String serviceDate = input.next();
 
         // create connection stuff
-        Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
 
@@ -477,18 +441,12 @@ public class EventRentalQuerying {
                     System.out.println("SQL ERROR: " + e.getMessage());
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+
         }
 
     }
 
-    public static void updateClientPhoneNumber(String url, String user, String password) {
+    public static void updateClientPhoneNumber(Connection conn, String url, String user, String password) {
 
         // ask for client ID from user
         Scanner input = new Scanner(System.in);
@@ -498,7 +456,6 @@ public class EventRentalQuerying {
         String newPhone = input.next();
 
         // create connection stuff
-        Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
 
@@ -553,18 +510,12 @@ public class EventRentalQuerying {
                     System.out.println("SQL ERROR: " + e.getMessage());
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+
         }
 
     }
 
-    public static void setEquipmentAsCheckedOut(String url, String user, String password) {
+    public static void setEquipmentAsCheckedOut(Connection conn, String url, String user, String password) {
 
         // ask for client ID from user
         Scanner input = new Scanner(System.in);
@@ -572,7 +523,6 @@ public class EventRentalQuerying {
         String equipmentID = input.next();
 
         // create connection stuff
-        Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
 
@@ -627,13 +577,7 @@ public class EventRentalQuerying {
                     System.out.println("SQL ERROR: " + e.getMessage());
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+
         }
 
     }
