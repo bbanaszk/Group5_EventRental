@@ -348,14 +348,28 @@ public class UpdateController {
                 String name = rs.getMetaData().getColumnName(i + 1);
 
                 if (primaryKeys.contains(name)) {
-
                     primaryKeyValues.add(selectedRow.get(i).toString());
+                }
+            }
+
+            List<String> updatedFields = new ArrayList<>();
+            List<String> columns = new ArrayList<>();
+
+            for (Node node : inputFieldsContainer.getChildren()) {
+                if (node instanceof HBox) {
+                    HBox box = (HBox) node;
+                    TextField textField = (TextField) box.getChildren().get(1);
+                    Label label = (Label) box.getChildren().get(0);
+                    updatedFields.add(textField.getText());
+                    columns.add(label.getText());
                 }
             }
 
             System.out.println("DEBUG: Primary Keys = " + primaryKeys);
             System.out.println("DEBUG: Primary Key Values = " + primaryKeyValues);
-            updateSQL(tableName, primaryKeys, primaryKeyValues);
+            // updateSQL(tableName, primaryKeys, primaryKeyValues);
+
+            updateSQL(tableName, columns, updatedFields, primaryKeys, primaryKeyValues);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -416,12 +430,12 @@ public class UpdateController {
         discardButton.setVisible(false);
     }
 
-    private void updateSQL(String tableName, List<String> columnNames, List<String> updatedFields, String primaryKey, String pkValue) {
+    private void updateSQL(String tableName, List<String> columns, List<String> updatedFields, List<String> primaryKey, List<String> pkValue) {
         PreparedStatement stmt = null;
         Connection conn = null;
         String url = "jdbc:mysql://localhost:3306/EventRental";
         String user = "root";
-        String password = "jmelcho5";
+        String password = "rootROOT!";
         // String url = HelloApplication.url;
         // String user = HelloApplication.username;
         // String password = HelloApplication.password;
@@ -436,13 +450,13 @@ public class UpdateController {
 
             for (int i = 0; i < updatedFields.size(); i++) {
                 if (i < updatedFields.size() - 1) {
-                    str.append(columnNames.get(i)).append(" = ").append("'").append(updatedFields.get(i)).append("'").append(", ");
+                    str.append(columns.get(i)).append(" = ").append("'").append(updatedFields.get(i)).append("'").append(", ");
                 } else {
-                    str.append(columnNames.get(i)).append(" = ").append("'").append(updatedFields.get(i)).append("'");
+                    str.append(columns.get(i)).append(" = ").append("'").append(updatedFields.get(i)).append("'");
                 }
             }
 
-            str.append(" WHERE ").append(primaryKey).append(" = ").append("'").append(pkValue).append("'");
+            str.append(" WHERE ").append(primaryKey.get(0)).append(" = ").append("'").append(pkValue.get(0)).append("'");
 
             stmt = conn.prepareStatement(str.toString());
             try {
