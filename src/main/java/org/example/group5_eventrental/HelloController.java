@@ -1,62 +1,109 @@
 package org.example.group5_eventrental;
 
-//import com.mysql.cj.jdbc.JdbcConnection;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.util.Callback;
 import org.controlsfx.control.ListSelectionView;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
-
-import java.sql.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class HelloController {
-    @FXML private TextField inputTextField;
-    @FXML private TextField inputURLField;
-    @FXML private TextField inputUsernameField;
-    @FXML private TextField inputPasswordField;
-    @FXML private Label welcomeText;
-    @FXML private Label SQLstatus;
     @FXML private Label errorLabel;
+    @FXML private Label SQLstatus;
     @FXML private ObservableList<ObservableList> data;
-    @FXML private ObservableList<ObservableList> query;
-    @FXML private ListSelectionView selectedAttributes;
+    @FXML private ListSelectionView attributeNames;
+    @FXML private ListSelectionView tableNames;
     @FXML private TableView tableView;
-    private StringBuilder questionMark1 = new StringBuilder("?");
-    private StringBuilder questionMark2 = new StringBuilder("?");
-//    private ser322.JDBCConnection jdbc;
-//
-//    @FXML protected void onConnectField() {
-//        String url = inputURLField.getText();
-//        String username = inputUsernameField.getText();
-//        String password = inputPasswordField.getText();
-//
-//        // Connect
-//        jdbc = new ser322.JDBCConnection();
-//        jdbc.establishConnection("com.mysql.cj.jdbc.Driver", url, username, password);
-//        // IF successful, figure out how to get to a new UI screen that shows Select, Update, Delete, Edit
-//    }
+    @FXML private TextField filter;
+    @FXML private CheckBox leftJoin;
 
-    @FXML protected void fetch(String query) {
+    private Map<String, List<String>> tableAttributes = new HashMap<>();
+    private Map<String, List<String>> tableRelationships = new HashMap<>();
+    private Map<String, String> attributeNaming = new HashMap<>();
+
+    private String url = "jdbc:mysql://localhost:3306/EventRental";
+    private String user = "root";
+    private String password = "rootROOT!";
+    private String driver = "com.mysql.cj.jdbc.Driver";
+
+    private static Connection conn;
+
+    private String relationshipName = "";
+    private List<String> relationshipAttributeList = new ArrayList<>();
+    private String joinClausePrimary = "";
+    private String joinClauseSecondary = "";
+
+    @FXML protected void initialize() {
+        Statement stmt = null;
+
+        try {
+            Class.forName(driver);
+            conn = DriverManager.getConnection(url, user, password);
+            stmt = conn.createStatement();
+
+            DatabaseMetaData dmbd = conn.getMetaData();
+            ResultSet tables = dmbd.getTables(conn.getCatalog(), "EventRental", "%", new String[]{"TABLE"});
+            stmt = conn.createStatement();
+
+            tableAttributes.clear();
+
+            while (tables.next()) {
+                String tableName = tables.getString("TABLE_NAME");
+
+                if (tableName.contains("_")) {
+                    tableRelationships.put(tableName, new ArrayList<>());
+                    continue;
+                }
+
+                ResultSet rs = stmt.executeQuery("SELECT * FROM " + tableName);
+
+                tableAttributes.put(tableName, new ArrayList<>());
+                tableNames.getSourceItems().add(tableName);
+
+                ResultSetMetaData rsmd = rs.getMetaData();
+                int cols = rsmd.getColumnCount();
+
+                for (int i = 1; i <= cols; i++) {
+                    String columnName = rsmd.getColumnName(i);
+                    tableAttributes.get(tableName).add(columnName);
+                }
+                rs.close();
+            }
+
+            updateTables();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (conn != null) conn.close();
+                if (stmt != null) stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @FXML protected void fetch(List<String> selectedColumns, List<String> selectedTables, String filterCondition) {
         /*
         Below is code for testing. Query is read in from input box and then converted to string in the onExecuteButtonClick()
         which then passes that string to this method to display
         */
-
-        String url = "jdbc:mysql://localhost:3306/EventRental";
-        String user = "root";
-        String password = "rootROOT!";
-        String driver = "com.mysql.cj.jdbc.Driver";
 
         data = FXCollections.observableArrayList();
         Connection conn = null;
@@ -66,35 +113,65 @@ public class HelloController {
         try {
             Class.forName(driver);
             conn = DriverManager.getConnection(url, user, password);
-
             stmt = conn.createStatement();
 
-            rs = stmt.executeQuery(query);
+            String columns = String.join(", ", selectedColumns);
+            String tables = String.join(", ", selectedTables);
+
+            StringBuilder sql = new StringBuilder();
+
+            if (selectedTables.size() == 2) {
+                loadTableRelationships(selectedTables);
+
+                if (leftJoin.isSelected()) {
+                    sql.append("SELECT DISTINCT ").append(columns).append(" FROM ").append(selectedTables.get(0));
+                    sql.append(" LEFT JOIN ").append(relationshipName).append(" ON ").append(joinClausePrimary);
+                    sql.append(" LEFT JOIN ").append(selectedTables.get(1)).append(" ON ").append(joinClauseSecondary);
+                    sql.append(";");
+                } else {
+                    sql.append("SELECT DISTINCT ").append(columns).append(" FROM ").append(tables).append(",").append(relationshipName).append(" WHERE ");
+                    if (filterCondition == null || filterCondition.isEmpty()) {
+                        sql.append(joinClausePrimary).append(" AND ").append(joinClauseSecondary).append(";");
+                    } else {
+                        sql.append(joinClausePrimary).append(" AND ").append(joinClauseSecondary).append(" AND ");
+                        String attr = filterCondition.split("=")[0];
+                        if (joinClausePrimary.contains(attr)) {
+                            sql.append(selectedTables.get(0)).append(".").append(filterCondition).append(";");
+                        } else if (joinClauseSecondary.contains(attr)) {
+                            sql.append(selectedTables.get(1)).append(".").append(filterCondition).append(";");
+                        }
+                    }
+                }
+            } else {
+                sql.append("SELECT DISTINCT ").append(columns).append(" FROM ").append(tables);
+                if (filterCondition == null || filterCondition.isEmpty()) {
+                    sql.append(";");
+                } else {
+                    sql.append(" WHERE ").append(filterCondition).append(";");
+                }
+            }
+
+            SQLstatus.setText(sql.toString());
+
+            rs = stmt.executeQuery(sql.toString());
 
             for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
-                //We are using non property style for making dynamic table
                 final int j = i;
                 TableColumn col = new TableColumn(rs.getMetaData().getColumnName(i + 1));
                 col.setCellValueFactory((Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>) param ->
                         new SimpleStringProperty(param.getValue().get(j).toString()));
-                selectedAttributes.getSourceItems().addAll(col.getText());
 
                 tableView.getColumns().addAll(col);
-                System.out.println("Column [" + i + "] ");
             }
 
             while (rs.next()) {
-                //Iterate Row
                 ObservableList<String> row = FXCollections.observableArrayList();
                 for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-                    //Iterate Column
                     row.add(rs.getString(i));
                 }
-                System.out.println("Row [1] added " + row);
                 data.add(row);
             }
 
-            //FINALLY ADDED TO TableView
             tableView.setItems(data);
         } catch (Exception se) {
             errorLabel.setText(se.toString());
@@ -107,25 +184,83 @@ public class HelloController {
                 if (conn != null)
                     conn.close();
             } catch (SQLException se) {
-//                SQLstatus.setText(se.getSQLState());
                 errorLabel.setText(se.toString());
             }
         }
     }
 
-    @FXML protected void onAddButtonClick() {
-        welcomeText.setText("Add new entry");
+    protected void updateTables() {
+        tableNames.getTargetItems().addListener((ListChangeListener<String>) change -> {
+            while (change.next()) {
+
+                if (tableNames.getTargetItems().size() != 2) {
+                    leftJoin.setDisable(true);
+                } else {
+                    leftJoin.setDisable(false);
+                }
+
+                if (change.wasAdded() || change.wasReplaced()) {
+                    for (String tableName : change.getAddedSubList()) {
+                        updateAttributeNames(tableName);
+                    }
+
+                    if (tableNames.getTargetItems().size() == 2) {
+                        loadTableRelationships(tableNames.getTargetItems());
+                        for (String attributeName : relationshipAttributeList) {
+                            attributeNames.getSourceItems().add(relationshipName + "." + attributeName);
+                        }
+                    }
+
+                    if (tableNames.getTargetItems().size() > 2) {
+                        removeAttributeNames(relationshipName);
+                    }
+                }
+                if (change.wasRemoved()) {
+                    for (String tableName : change.getRemoved()) {
+                        removeAttributeNames(tableName);
+                    }
+
+                    if (tableNames.getTargetItems().size() == 2) {
+                        loadTableRelationships(tableNames.getTargetItems());
+                        for (String attributeName : relationshipAttributeList) {
+                            attributeNames.getSourceItems().add(relationshipName + "." + attributeName);
+                        }
+                    }
+
+                    if (tableNames.getTargetItems().size() == 1 || tableNames.getTargetItems().size() > 2) {
+                        removeAttributeNames(relationshipName);
+                    }
+                }
+
+                leftJoin.setSelected(false);
+            }
+        });
     }
 
-    @FXML protected void onUpdateButtonClick() {
-        welcomeText.setText("Update existing entry");
+    private void updateAttributeNames(String tableName) {
+        List<String> attributes = tableAttributes.get(tableName);
+        if (attributes != null) {
+            for (String attribute : attributes) {
+
+                attributeNames.getSourceItems().add(tableName + "." + attribute);
+                // "EVENT.eventID" do "Event event ID"
+
+                // logic for which relationship is linked to the tableName
+                // for each attribute in relationship {
+                //     attributeNames.getSourceItems().add(tableName + "." + relationship);
+                // }
+            }
+        } else {
+            attributeNames.getSourceItems().clear();
+        }
     }
 
-    @FXML protected void onDeleteButtonClick() {
-        welcomeText.setText("Delete existing entry");
+    private void removeAttributeNames(String tableName) {
+        attributeNames.getTargetItems().removeIf(attribute -> ((String) attribute).startsWith(tableName + "."));
+        attributeNames.getSourceItems().removeIf(attribute -> ((String) attribute).startsWith(tableName + "."));
     }
 
-    @FXML protected void onExecuteButtonClick() {
+    @FXML protected void onSelectQueryButtonClick() {
         if (tableView != null) {
             tableView.getItems().clear();
             tableView.getColumns().clear();
@@ -136,77 +271,84 @@ public class HelloController {
         if (errorLabel != null) {
             errorLabel.setText("");
         }
-//        if (SQLstatus != null) {
-//            SQLstatus.setText("");
-//        }
-        String input = inputTextField.getText();
-        fetch(input);
+       if (SQLstatus != null) {
+           SQLstatus.setText("");
+       }
 
-//        try {
-//            onSelectQueryButtonClick();
-//        } catch (SQLException se) {
-//            se.printStackTrace();
-//        }
+        List<String> selectedTables = tableNames.getTargetItems();
+        List<String> selectedColumns = attributeNames.getTargetItems();
+        String filterCondition = filter.getText();
+        fetch(selectedColumns, selectedTables, filterCondition);
     }
 
-    @FXML protected void onSelectQueryButtonClick() throws SQLException {
-//        query = FXCollections.observableArrayList();
-//        ObservableList<ObservableList> actions = selectedAttributes.getActions();
-        ObservableList<String> row = FXCollections.observableArrayList();
-        row.addAll(selectedAttributes.getTargetItems());
+    protected void loadTableRelationships(List<String> selectedTables) {
+        // if (tableNames.getTargetItems().size() != 2) {
+        //     relationshipName = "";
+        //     relationshipAttributeList = new ArrayList<>();
+        //     joinClausePrimary = "";
+        //     joinClauseSecondary = "";
+        //     return;
+        // }
+        try {
+            Class.forName(driver);
+            conn = DriverManager.getConnection(url, user, password);
+            DatabaseMetaData metaData = conn.getMetaData();
+            for (String relationship : tableRelationships.keySet()) {
+                ResultSet entity1 = metaData.getCrossReference(conn.getCatalog(), "EventRental", selectedTables.get(0), conn.getCatalog(), "EventRental", relationship);
+                ResultSet entity2 = metaData.getCrossReference(conn.getCatalog(), "EventRental", selectedTables.get(1), conn.getCatalog(), "EventRental", relationship);
+                ResultSet columns = metaData.getColumns(conn.getCatalog(), "EventRental", relationship, null);
 
-        questionMark1 = new StringBuilder("?");
+                boolean entity1Linked = false;
+                boolean entity2Linked = false;
+                String pkColumnPrimary = "";
+                String fkColumnPrimary = "";
+                String pkColumnSecondary = "";
+                String fkColumnSecondary = "";
 
-        for (String str : row) {
-            questionMark1.append(str.toString()).append(",");
+                while (entity1.next()) {
+                    String fkTable = entity1.getString("FKTABLE_NAME");
+                    if (fkTable.equals(relationship)) {
+                        entity1Linked = true;
+                        pkColumnPrimary = entity1.getString("PKCOLUMN_NAME");
+                        fkColumnPrimary = entity1.getString("FKCOLUMN_NAME");
+                    }
+                }
+
+                while (entity2.next()) {
+                    String fkTable = entity2.getString("FKTABLE_NAME");
+                    if (fkTable.equals(relationship)) {
+                        entity2Linked = true;
+                        pkColumnSecondary = entity2.getString("PKCOLUMN_NAME");
+                        fkColumnSecondary = entity2.getString("FKCOLUMN_NAME");
+                    }
+                }
+
+                if (entity1Linked && entity2Linked) {
+                    System.out.println("Relationship table found linking " + selectedTables.get(0) + " and " + selectedTables.get(1) + ": " + relationship);
+                    relationshipName = relationship;
+                    relationshipAttributeList = new ArrayList<>();
+                    while (columns.next()) {
+                        relationshipAttributeList.add(columns.getString("COLUMN_NAME"));
+                    }
+                    joinClausePrimary = relationship + "." + fkColumnPrimary + "=" + selectedTables.get(0) + "." + pkColumnPrimary;
+                    joinClauseSecondary = relationship + "." + fkColumnSecondary + "=" + selectedTables.get(1) + "." + pkColumnSecondary;
+                    return;
+                }
+            }
+            // relationshipName = "";
+            // relationshipAttributeList = new ArrayList<>();
+            // joinClausePrimary = "";
+            // joinClauseSecondary = "";
+        } catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException se) {
+                errorLabel.setText(se.toString());
+            }
         }
-
-        if (questionMark1.length() > 1) {
-            questionMark1.deleteCharAt(questionMark1.length() - 1);
-        }
-
-
-        questionMark2 = new StringBuilder("?");
-
-        if (!questionMark1.toString().equals("?")) {
-            questionMark1.deleteCharAt(0);
-        }
-
-        if (!questionMark2.toString().equals("?")) {
-            questionMark2.deleteCharAt(0);
-        }
-
-        SQLstatus.setText("SELECT " + questionMark1.toString() + " FROM " + questionMark2.toString());
-//        System.out.println(questionMark1);
-
-//        ps.setString(1, questionMark1.toString());
-//        for (int i = 0; i < row.size(); i++) {
-//            System.out.println(row.get(i).toString());
-//        }
-
-        //                fill the "query" variable with the columns table name (will have repeated values)
-//        selectedAttributes.getSourceItems().addAll(data);
-//        Connection conn = DriverManager.getConnection("url", "user", "password");
-//        PreparedStatement ps = conn.prepareStatement("SELECT ? FROM ?");
-//
-//        StringBuilder questionMark1 = new StringBuilder();
-//        for (String str : selectedAttributes) {
-//            questionMark1.append(str.getattribute()).append(",");
-//        }
-//        questionMark1.deleteCharAt(questionMark1.length() - 1);
-//
-//        ps.setString(1, questionMark1.toString());
-//
-//        Set<String> set = new HashSet<>();
-//
-//        StringBuilder questionMark2 = new StringBuilder();
-//        for (String str : selectedAttributes) {
-//            if (!set.contains(str)) {
-//                questionMark2.append(str.getAttributeTable()).append(",");
-//            }
-//        }
-//        questionMark2.deleteCharAt(questionMark2.length() - 1);
-//        ps.setString(2, questionMark2.toString());
-
     }
 }

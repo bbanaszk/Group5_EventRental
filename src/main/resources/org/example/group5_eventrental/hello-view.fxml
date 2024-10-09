@@ -6,45 +6,32 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TableView?>
 
 <?import org.controlsfx.control.ListSelectionView?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.CheckBox?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.example.group5_eventrental.HelloController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <VBox>
-        <TextField prefWidth="50.0" fx:id="inputURLField" promptText="Enter your URL"/>
-        <TextField prefWidth="50.0" fx:id="inputUsernameField" promptText="Enter your Username"/>
-        <TextField prefWidth="50.0" fx:id="inputPasswordField" promptText="Enter your Password"/>
-
-<!--        <Button text="Connect" onAction="#onConnectField"/>-->
-    </VBox>
-
-    <Label fx:id="welcomeText"/>
-
     <HBox alignment="CENTER" spacing="10.0">
-        <TextField prefWidth="200.0" fx:id="inputTextField" promptText="Enter Query here"/>
-        <Button text="Execute" onAction="#onExecuteButtonClick"/>
-    </HBox>
-
-    <HBox alignment="CENTER" spacing="10.0">
-<!--        <Button text="Add" onAction="#onAddButtonClick"/>-->
-        <ListSelectionView fx:id="selectedAttributes"/>
+        <ListSelectionView fx:id="tableNames" prefWidth="500.0" prefHeight="600.0"/>
+        <ListSelectionView fx:id="attributeNames" prefWidth="500.0" prefHeight="600.0"/>
 
         <VBox alignment="CENTER" spacing="10.0">
-            <Label fx:id="SQLstatus"/>
+            <CheckBox fx:id="leftJoin" text="Include mismatching data" disable="true"/>
             <Button text="Query" onAction="#onSelectQueryButtonClick"/>
         </VBox>
-
-<!--        <Button text="Update" onAction="#onUpdateButtonClick"/>-->
-<!--        <Button text="Delete" onAction="#onDeleteButtonClick"/>-->
     </HBox>
+<!--    <Text>WHERE</Text>-->
+    <TextField fx:id="filter" promptText="WHERE"/>
 
     <TableView fx:id="tableView"/>
     <Label fx:id="errorLabel"/>
+    <Label fx:id="SQLstatus"/>
 
 </VBox>
