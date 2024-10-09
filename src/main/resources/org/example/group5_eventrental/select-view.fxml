@@ -34,6 +34,6 @@
 
         <TextField fx:id="filter" promptText="WHERE"/>
         <TableView fx:id="tableView"/>
-        <Label fx:id="errorLabel"/>
-        <Label fx:id="SQLstatus"/>
+        <Label alignment="CENTER" fx:id="errorLabel"/>
+        <Label alignment="CENTER" fx:id="SQLstatus"/>
 </VBox>
