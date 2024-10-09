@@ -66,6 +66,7 @@ public class UpdateController {
             data.clear();
         }
         RadioButton selectedButton = (RadioButton) group.getSelectedToggle();
+
         if (selectedButton != null) {
             String option = selectedButton.getText();
 

@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 public class HelloApplication extends Application {
@@ -28,6 +29,17 @@ public class HelloApplication extends Application {
         stage.setTitle("Event Rental");
         stage.setScene(scene);
         stage.show();
+
+        try {
+            if (statement != null)
+                statement.close();
+            if (resultSet != null)
+                resultSet.close();
+            if (connection != null)
+                connection.close();
+        } catch (SQLException se) {
+            System.out.println(se.getMessage());
+        }
     }
 
     public static void main(String[] args) {
