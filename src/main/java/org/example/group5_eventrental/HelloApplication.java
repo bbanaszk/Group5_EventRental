@@ -6,29 +6,30 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class HelloApplication extends Application {
 
     protected static Connection connection = null;
     protected static Statement statement = null;
     protected static ResultSet resultSet = null;
-    protected static String url, username, password;
+    protected static String url, username, password, driver;
+    protected static PreparedStatement preparedStatement = null;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 300, 300);
+        driver = "com.mysql.cj.jdbc.Driver";
 
-        ConnectionController connectionController = fxmlLoader.getController();
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("update-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 600, 1000);
+
+        UpdateController connectionController = fxmlLoader.getController();
         connectionController.setStage(stage);
 
         stage.setTitle("Event Rental");
         stage.setScene(scene);
         stage.show();
+        stage.centerOnScreen();
 
         try {
             if (statement != null)

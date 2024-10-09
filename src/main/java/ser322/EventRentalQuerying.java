@@ -10,7 +10,7 @@ public class EventRentalQuerying {
 
         String url = "jdbc:mysql://localhost:3306/EventRental";
         String user = "root";
-        String password = "Ru$7yB1k35";
+        String password = "rootROOT!";
 
 
         Connection conn = null;

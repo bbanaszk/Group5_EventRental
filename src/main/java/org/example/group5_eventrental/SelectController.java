@@ -29,12 +29,13 @@ public class SelectController {
 
     public void returnToQuerySelection() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("query-selection.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1220, 840);
+        Scene scene = new Scene(fxmlLoader.load(), 300, 300);
 
         QueryController queryController = fxmlLoader.getController();
         queryController.setStage(stage);
 
         stage.setScene(scene);
+        stage.centerOnScreen();
     }
 
     @FXML private Label errorLabel;
@@ -240,7 +241,7 @@ public class SelectController {
                         }
                     }
 
-                    if (tableNames.getTargetItems().size() == 1 || tableNames.getTargetItems().size() > 2) {
+                    if (tableNames.getTargetItems().size() < 2 || tableNames.getTargetItems().size() > 2) {
                         removeAttributeNames(relationshipName);
                     }
                 }
@@ -300,6 +301,7 @@ public class SelectController {
 
                 boolean entity1Linked = false;
                 boolean entity2Linked = false;
+
                 String pkColumnPrimary = "";
                 String fkColumnPrimary = "";
                 String pkColumnSecondary = "";
@@ -324,7 +326,7 @@ public class SelectController {
                 }
 
                 if (entity1Linked && entity2Linked) {
-                    System.out.println("Relationship table found linking " + selectedTables.get(0) + " and " + selectedTables.get(1) + ": " + relationship);
+//                    System.out.println("Relationship table found linking " + selectedTables.get(0) + " and " + selectedTables.get(1) + ": " + relationship);
                     relationshipName = relationship;
                     relationshipAttributeList = new ArrayList<>();
                     while (columns.next()) {

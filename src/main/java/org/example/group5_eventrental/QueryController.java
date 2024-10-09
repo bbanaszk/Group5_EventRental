@@ -15,41 +15,43 @@ public class QueryController {
 
     public void switchToSelectView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("select-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1220, 1040);
+        Scene scene = new Scene(fxmlLoader.load(), 1320, 1220);
 
         SelectController selectController = fxmlLoader.getController();
         selectController.setStage(stage);
 
         stage.setScene(scene);
+        stage.centerOnScreen();
     }
-
-    public void switchToInsertView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("insert-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 820, 640);
-
-        InsertController insertController = fxmlLoader.getController();
-        insertController.setStage(stage);
-
-        stage.setScene(scene);
-    }
+    //
+    // public void switchToInsertView() throws IOException {
+    //     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("insert-view.fxml"));
+    //     Scene scene = new Scene(fxmlLoader.load(), 820, 640);
+    //
+    //     InsertController insertController = fxmlLoader.getController();
+    //     insertController.setStage(stage);
+    //
+    //     stage.setScene(scene);
+    // }
 
     public void switchToUpdateView() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("update-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 820, 640);
+        Scene scene = new Scene(fxmlLoader.load(), 600, 1000);
 
         UpdateController updateController = fxmlLoader.getController();
         updateController.setStage(stage);
 
         stage.setScene(scene);
+        stage.centerOnScreen();
     }
-
-    public void switchToDeleteView() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("delete-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 820, 640);
-
-        DeleteController deleteController = fxmlLoader.getController();
-        deleteController.setStage(stage);
-
-        stage.setScene(scene);
-    }
+    //
+    // public void switchToDeleteView() throws IOException {
+    //     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("delete-view.fxml"));
+    //     Scene scene = new Scene(fxmlLoader.load(), 820, 640);
+    //
+    //     DeleteController deleteController = fxmlLoader.getController();
+    //     deleteController.setStage(stage);
+    //
+    //     stage.setScene(scene);
+    // }
 }

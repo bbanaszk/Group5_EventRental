@@ -13,15 +13,19 @@
 <?import org.controlsfx.control.ListSelectionView?>
 
 <?import javafx.scene.control.RadioButton?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
       fx:controller="org.example.group5_eventrental.UpdateController">
 
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <Button text="Back" AnchorPane.topAnchor="10.0" AnchorPane.leftAnchor="10.0" onAction="#returnToQuerySelection"/>
-    <VBox alignment="CENTER">
+    <HBox spacing="20.0" alignment="TOP_LEFT">
+        <Button text="Back" onAction="#returnToQuerySelection"/>
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="20.0">
+        <Label text="What data would you like to modify?" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
         <HBox alignment="CENTER" spacing="10.0">
             <RadioButton fx:id="client" text="CLIENT"/>
             <RadioButton fx:id="employee" text="EMPLOYEE"/>
@@ -34,17 +38,25 @@
     </VBox>
     <TableView fx:id="tableView"/>
 
-    <HBox spacing="20.0" alignment="CENTER">
+    <HBox spacing="15.0" alignment="CENTER">
         <Button text="Add new data" onAction="#addNewRow"/>
         <Button text="Update data in selected row" onAction="#updateSelectedRow"/>
         <Button text="Delete all data in selected row" onAction="#deleteSelectedRow"/>
     </HBox>
+    <Label fx:id="errorLabel" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: red;"/>
 
-    <VBox fx:id="inputFieldsContainer" spacing="10" />
+    <Label fx:id="confirmationMessage" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: red;"/>
+    <HBox spacing="20.0" alignment="CENTER">
+        <Button fx:id="delete"  text="Delete" onAction="#confirmDelete" visible="false"/>
+        <Button fx:id="discard"  text="Discard" onAction="#discardDelete" visible="false"/>
+    </HBox>
+
+    <VBox fx:id="inputFieldsContainer" spacing="10" maxWidth="450.0"/>
 
     <HBox spacing="20.0" alignment="CENTER">
-        <Button fx:id="saveButton"  text="Save" onAction="#saveChanges" visible="false"/>
-        <Button fx:id="discardButton"  text="Discard" onAction="#discardChanges" visible="false"/>
+        <Button fx:id="saveButtonAdd"  text="Save" onAction="#saveChangesInsert" visible="false"/>
+        <Button fx:id="saveButtonUpdate"  text="Save" onAction="#saveChangesUpdate" visible="false"/>
+        <Button fx:id="discardButton"  text="Discard" onAction="#discardChangesUpdate" visible="false"/>
     </HBox>
 
 
