@@ -20,10 +20,10 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         driver = "com.mysql.cj.jdbc.Driver";
 
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("update-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 1000);
+        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 300, 300);
 
-        UpdateController connectionController = fxmlLoader.getController();
+        ConnectionController connectionController = fxmlLoader.getController();
         connectionController.setStage(stage);
 
         stage.setTitle("Event Rental");
@@ -38,6 +38,7 @@ public class HelloApplication extends Application {
                 resultSet.close();
             if (connection != null)
                 connection.close();
+            if (preparedStatement != null) preparedStatement.close();
         } catch (SQLException se) {
             System.out.println(se.getMessage());
         }

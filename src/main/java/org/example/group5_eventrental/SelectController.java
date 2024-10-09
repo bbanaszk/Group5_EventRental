@@ -50,12 +50,12 @@ public class SelectController {
     private Map<String, List<String>> tableAttributes = new HashMap<>();
     private Map<String, List<String>> tableRelationships = new HashMap<>();
 
-    private String url = "jdbc:mysql://localhost:3306/EventRental";
-    private String user = "root";
-    private String password = "rootROOT!";
-    private String driver = "com.mysql.cj.jdbc.Driver";
+    private String url = HelloApplication.url;
+    private String user = HelloApplication.username;
+    private String password = HelloApplication.password;
+    private String driver = HelloApplication.driver;
 
-    private static Connection conn;
+    private static Connection conn = HelloApplication.connection;
 
     private String relationshipName = "";
     private List<String> relationshipAttributeList = new ArrayList<>();
@@ -114,13 +114,7 @@ public class SelectController {
     }
 
     @FXML protected void fetch(List<String> selectedColumns, List<String> selectedTables, String filterCondition) {
-    /*
-    Below is code for testing. Query is read in from input box and then converted to string in the onExecuteButtonClick()
-    which then passes that string to this method to display
-    */
-
         data = FXCollections.observableArrayList();
-        Connection conn = null;
         ResultSet rs = null;
         Statement stmt = null;
 

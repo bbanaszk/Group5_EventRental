@@ -110,14 +110,11 @@ public class UpdateController {
             data = FXCollections.observableArrayList();
             ResultSet rs = null;
             Statement stmt = null;
-            Connection conn = null;
-            String url = "jdbc:mysql://localhost:3306/EventRental";
-            String user = "root";
-            String password = "rootROOT!";
-            // String url = HelloApplication.url;
-            // String user = HelloApplication.username;
-            // String password = HelloApplication.password;
-            String driver = "com.mysql.cj.jdbc.Driver";
+            Connection conn = HelloApplication.connection;
+            String url = HelloApplication.url;
+            String user = HelloApplication.username;
+            String password = HelloApplication.password;
+            String driver = HelloApplication.driver;
 
             try {
                 Class.forName(driver);
@@ -309,15 +306,12 @@ public class UpdateController {
 
         Statement stmt = null;
         ResultSet rs = null;
-        Connection conn = null;
-        String url = "jdbc:mysql://localhost:3306/EventRental";
-        String user = "root";
-        String password = "rootROOT!";
-        // String url = HelloApplication.url;
-        // String user = HelloApplication.username;
-        // String password = HelloApplication.password;
-        // String driver = HelloApplication.driver;
-        String driver = "com.mysql.cj.jdbc.Driver";
+        ResultSet pkResultSet = null;
+        Connection conn = HelloApplication.connection;
+        String url = HelloApplication.url;
+        String user = HelloApplication.username;
+        String password = HelloApplication.password;
+        String driver = HelloApplication.driver;
 
         primaryKeys = new ArrayList<>();
 
@@ -325,7 +319,7 @@ public class UpdateController {
             Class.forName(driver);
             conn = DriverManager.getConnection(url, user, password);
             DatabaseMetaData meta = conn.getMetaData();
-            ResultSet pkResultSet = meta.getPrimaryKeys(conn.getCatalog(), "EventRental", tableName);
+            pkResultSet = meta.getPrimaryKeys(conn.getCatalog(), "EventRental", tableName);
 
             while (pkResultSet.next()) {
                 String primaryKey = pkResultSet.getString("COLUMN_NAME");
@@ -371,6 +365,7 @@ public class UpdateController {
 
             updateSQL(tableName, columns, updatedFields, primaryKeys, primaryKeyValues);
 
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -379,6 +374,10 @@ public class UpdateController {
                     stmt.close();
                 if (conn != null)
                     conn.close();
+                if (rs != null)
+                    rs.close();
+                if (pkResultSet != null)
+                    pkResultSet.close();
             } catch (SQLException se) {
                 errorLabel.setText(se.getMessage());
             }
@@ -433,14 +432,10 @@ public class UpdateController {
     private void updateSQL(String tableName, List<String> columns, List<String> updatedFields, List<String> primaryKey, List<String> pkValue) {
         PreparedStatement stmt = null;
         Connection conn = null;
-        String url = "jdbc:mysql://localhost:3306/EventRental";
-        String user = "root";
-        String password = "rootROOT!";
-        // String url = HelloApplication.url;
-        // String user = HelloApplication.username;
-        // String password = HelloApplication.password;
-        // String driver = HelloApplication.driver;
-        String driver = "com.mysql.cj.jdbc.Driver";
+        String url = HelloApplication.url;
+        String user = HelloApplication.username;
+        String password = HelloApplication.password;
+        String driver = HelloApplication.driver;
 
         try {
             Class.forName(driver);
@@ -485,14 +480,10 @@ public class UpdateController {
     private void insertSQL(String tableName, List<String> insertFields) {
         PreparedStatement stmt = null;
         Connection conn = null;
-        String url = "jdbc:mysql://localhost:3306/EventRental";
-        String user = "root";
-        String password = "rootROOT!";
-        // String url = HelloApplication.url;
-        // String user = HelloApplication.username;
-        // String password = HelloApplication.password;
-        // String driver = HelloApplication.driver;
-        String driver = "com.mysql.cj.jdbc.Driver";
+        String url = HelloApplication.url;
+        String user = HelloApplication.username;
+        String password = HelloApplication.password;
+        String driver = HelloApplication.driver;
 
         try {
             Class.forName(driver);
@@ -540,14 +531,10 @@ public class UpdateController {
     private void deleteSQL(String tableName, List<String> columnNames, List<String> entryFields) {
         Statement stmt = null;
         Connection conn = null;
-        String url = "jdbc:mysql://localhost:3306/EventRental";
-        String user = "root";
-        String password = "rootROOT!";
-        // String url = HelloApplication.url;
-        // String user = HelloApplication.username;
-        // String password = HelloApplication.password;
-        // String driver = HelloApplication.driver;
-        String driver = "com.mysql.cj.jdbc.Driver";
+        String url = HelloApplication.url;
+        String user = HelloApplication.username;
+        String password = HelloApplication.password;
+        String driver = HelloApplication.driver;
 
         try {
             Class.forName(driver);

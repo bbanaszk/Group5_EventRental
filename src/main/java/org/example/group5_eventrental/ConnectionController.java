@@ -28,14 +28,22 @@ public class ConnectionController {
         HelloApplication.url = inputURLField.getText();
         HelloApplication.username = inputUsernameField.getText();
         HelloApplication.password = inputPasswordField.getText();
-        String driver = "com.mysql.jdbc.Driver";
-
+        String driver = HelloApplication.driver;
+        Connection conn = null;
         try {
             Class.forName(driver);
-            HelloApplication.connection = DriverManager.getConnection(HelloApplication.url, HelloApplication.username, HelloApplication.password);
+            conn = DriverManager.getConnection(HelloApplication.url, HelloApplication.username, HelloApplication.password);
             switchToQuerySelectionView();
         } catch (SQLException | ClassNotFoundException e) {
             loginText.setText("Incorrect login, try again!\n");
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
