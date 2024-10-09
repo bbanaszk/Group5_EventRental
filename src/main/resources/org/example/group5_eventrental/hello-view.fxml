@@ -6,32 +6,32 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TableView?>
 
 <?import org.controlsfx.control.ListSelectionView?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.CheckBox?>
 <VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.group5_eventrental.HelloController">
+      fx:controller="org.example.group5_eventrental.ConnectionController">
+
+    <Text> Enter credentials for JDBC Connection: </Text>
+
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <HBox alignment="CENTER" spacing="10.0">
-        <ListSelectionView fx:id="tableNames" prefWidth="500.0" prefHeight="600.0"/>
-        <ListSelectionView fx:id="attributeNames" prefWidth="500.0" prefHeight="600.0"/>
+    <VBox alignment="CENTER">
+        <TextField alignment="CENTER" maxWidth="250.0" fx:id="inputURLField" promptText="Enter your URL"/>
+        <TextField alignment="CENTER" maxWidth="250.0" fx:id="inputUsernameField" promptText="Enter your Username"/>
+        <TextField alignment="CENTER" maxWidth="250.0" fx:id="inputPasswordField" promptText="Enter your Password"/>
 
-        <VBox alignment="CENTER" spacing="10.0">
-            <CheckBox fx:id="leftJoin" text="Include mismatching data" disable="true"/>
-            <Button text="Query" onAction="#onSelectQueryButtonClick"/>
-        </VBox>
-    </HBox>
-<!--    <Text>WHERE</Text>-->
-    <TextField fx:id="filter" promptText="WHERE"/>
-
-    <TableView fx:id="tableView"/>
-    <Label fx:id="errorLabel"/>
-    <Label fx:id="SQLstatus"/>
-
+        <HBox alignment="CENTER">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            </padding>
+            <Label alignment="CENTER" fx:id="loginText"/>
+            <Button text="Connect" onAction="#validateConnection"/>
+        </HBox>
+    </VBox>
 </VBox>
+

@@ -6,12 +6,25 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class HelloApplication extends Application {
+
+    protected static Connection connection = null;
+    protected static Statement statement = null;
+    protected static ResultSet resultSet = null;
+    protected static String url, username, password;
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1220, 820);
+        Scene scene = new Scene(fxmlLoader.load(), 300, 300);
+
+        ConnectionController connectionController = fxmlLoader.getController();
+        connectionController.setStage(stage);
+
         stage.setTitle("Event Rental");
         stage.setScene(scene);
         stage.show();
