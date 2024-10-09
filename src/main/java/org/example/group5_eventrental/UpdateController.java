@@ -144,7 +144,7 @@ public class UpdateController {
                 }
                 tableView.setItems(data);
 
-                System.out.println(columnTypes);
+                // System.out.println(columnTypes);
             } catch (Exception se) {
                 System.out.println(se.getMessage());
             } finally {
@@ -359,8 +359,8 @@ public class UpdateController {
                 }
             }
 
-            System.out.println("DEBUG: Primary Keys = " + primaryKeys);
-            System.out.println("DEBUG: Primary Key Values = " + primaryKeyValues);
+            // System.out.println("DEBUG: Primary Keys = " + primaryKeys);
+            // System.out.println("DEBUG: Primary Key Values = " + primaryKeyValues);
             // updateSQL(tableName, primaryKeys, primaryKeyValues);
 
             updateSQL(tableName, columns, updatedFields, primaryKeys, primaryKeyValues);
@@ -405,9 +405,9 @@ public class UpdateController {
             updatedValues.add(textField.getText());
         }
 
-        for (String value : updatedValues) {
-            System.out.println(value);
-        }
+        // for (String value : updatedValues) {
+        //     System.out.println(value);
+        // }
 
         List<String> insertFields = new ArrayList<>();
 
@@ -552,7 +552,7 @@ public class UpdateController {
             }
 
             String sqlQuery = "DELETE FROM " + tableName + " WHERE " + attr;
-            System.out.println(sqlQuery);
+            // System.out.println(sqlQuery);
 
             try {
                 stmt = conn.createStatement();
