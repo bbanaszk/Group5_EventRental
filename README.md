@@ -33,6 +33,7 @@ Log in using your own url, user, and pass based on your SQL setup
 
 
 Video URL:
+https://youtu.be/LuwuCu6C9tE
 
 Contributions:
 
